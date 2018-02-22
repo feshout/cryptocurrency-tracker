@@ -10,9 +10,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Currency {
 
     @JsonIgnore
@@ -131,5 +132,23 @@ public class Currency {
     public void setPercentChange7d(String percentChange7d) {
         this.percentChange7d = percentChange7d;
     }
+
+    public String[] getAllData() {
+        String[] allDataWithTime = {this.timeStamp, this.name, this.symbol, this.priceUSD,
+                this.priceBTC, this.marketCapUSD, this.availableSupply,
+                this.totalSupply, this.totalSupply, this.percentChange1h,
+                this.percentChange24h, this.percentChange7d};
+        return allDataWithTime;
+    }
+
+    public String[] getAllDataWithoutTime() {
+
+        String[] dataWithTime = getAllData();
+
+        String[] allData = Arrays.copyOfRange(dataWithTime, 1, dataWithTime.length);
+
+        return allData;
+    }
+
 
 }

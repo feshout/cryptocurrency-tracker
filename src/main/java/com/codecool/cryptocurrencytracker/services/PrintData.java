@@ -1,4 +1,48 @@
 package com.codecool.cryptocurrencytracker.services;
 
-public class PrintData {
+import com.codecool.cryptocurrencytracker.currency.Currency;
+import com.codecool.cryptocurrencytracker.view.TableView;
+import org.springframework.stereotype.Component;
+
+
+import java.util.LinkedList;
+import java.util.List;
+
+@Component
+public class PrintData implements Runnable {
+
+    private List<Currency> dataToPrint = new LinkedList<>();
+    private TableView tableView;
+
+    PrintData(TableView tableView){
+        this.tableView = tableView;
+        Thread thread = new Thread(this);
+        thread.start();
+    }
+
+    @Override
+    public void run() {
+
+        boolean isRunning = true;
+
+        while(isRunning){
+
+            try {
+                Thread.sleep(10000);
+                clearScreen();
+                tableView.printActualData(dataToPrint);
+            } catch (InterruptedException e) {
+                isRunning = false;
+            }
+        }
+    }
+
+    public void setDataToPrint(List<Currency> dataToPrint){
+        this.dataToPrint = dataToPrint;
+    }
+
+    private void clearScreen() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
 }

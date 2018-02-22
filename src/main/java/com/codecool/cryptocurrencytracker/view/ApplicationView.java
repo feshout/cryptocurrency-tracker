@@ -1,4 +1,4 @@
-package com.codecool.cryptocurrencytracker.application;
+package com.codecool.cryptocurrencytracker.view;
 
 import java.util.Scanner;
 
