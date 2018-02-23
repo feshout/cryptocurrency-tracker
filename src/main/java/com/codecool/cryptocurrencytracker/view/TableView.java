@@ -12,8 +12,7 @@ public class TableView {
     private int nrOfColumnToSort = 0;
 
     private static final String[] NAMES_OF_COLUMNS_WITH_TIME = {"Time", "Name", "Symbol", "Price USD", "Price BTC",
-            "Market cap USD", "Available supply", "Total supply",
-            "% change 1h", "% change 24h", "% change 7d"};
+            "Market cap USD", "Available supply", "Total supply"};
 
 
     private static final String[] NAMES_OF_COLUMNS_WITHOUT_TIME = {"Name", "Symbol", "Price USD", "Price BTC",
@@ -31,6 +30,26 @@ public class TableView {
         }
 
         TextTable table = new TextTable(NAMES_OF_COLUMNS_WITHOUT_TIME, data);
+        table.setSort(nrOfColumnToSort);
+        table.printTable();
+
+    }
+
+    public void printHistoricalData(List<Currency> currencies) {
+
+        for (Currency currency : currencies){
+            System.out.println(currency.getAllDataWithoutTime());
+        }
+
+        int nrOfRows = currencies.size();
+        int nrOfColumns = NAMES_OF_COLUMNS_WITH_TIME.length;
+        String[][] data = new String[nrOfRows][nrOfColumns];
+
+        for(int i = 0; i < nrOfRows; i++) {
+            data[i] = currencies.get(i).getAllData();
+        }
+
+        TextTable table = new TextTable(NAMES_OF_COLUMNS_WITH_TIME, data);
         table.setSort(nrOfColumnToSort);
         table.printTable();
 

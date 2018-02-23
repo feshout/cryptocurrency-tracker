@@ -12,12 +12,13 @@ public class SaveData implements Runnable {
 
     private CurrencyRepository currencyRepository;
     private DataAccess dataAccess;
-    private static Map<String, Currency> currentCurrencyMap = new HashMap<>();
+    private Map<String, Currency> currentCurrencyMap;
+    private Thread thread;
 
     public SaveData(CurrencyRepository currencyRepository, DataAccess dataAccess) {
         this.currencyRepository = currencyRepository;
         this.dataAccess = dataAccess;
-        Thread thread = new Thread(this);
+        this.thread = new Thread(this);
         thread.start();
     }
 
@@ -25,15 +26,18 @@ public class SaveData implements Runnable {
     public void run() {
 
         boolean isRunning = true;
-        currentCurrencyMap = dataAccess.getData();
 
         while(isRunning){
 
             try {
-                Thread.sleep(30000);
-                if(!currentCurrencyMap.get("BTC").equals(dataAccess.getData().get("BTC"))){
+                Thread.sleep(5000);
+                if(currentCurrencyMap == null) {
+                    currentCurrencyMap = cloneMapWithCurrentData();
                     saveDataToDb();
-                    currentCurrencyMap = dataAccess.getData();
+                }
+                if(!currentCurrencyMap.get("ETH").getPriceBTC().equals(dataAccess.getData().get("ETH").getPriceBTC())){
+                    currentCurrencyMap = cloneMapWithCurrentData();
+                    saveDataToDb();
                 }
             } catch (InterruptedException e) {
                 isRunning = false;
@@ -43,9 +47,27 @@ public class SaveData implements Runnable {
 
     private void saveDataToDb() {
 
-        System.out.println("pizda");
         for (Currency currency : dataAccess.getData().values()){
             currencyRepository.save(currency);
         }
+    }
+
+    public void stopThread(){
+        this.thread.interrupt();
+    }
+
+    private Map<String, Currency> cloneMapWithCurrentData(){
+
+        Map<String, Currency> coppedMap = new HashMap<>();
+
+        try {
+            for(Currency currency : dataAccess.getData().values()) {
+                coppedMap.put(currency.getSymbol(), currency.clone());
+            }
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+
+        return coppedMap;
     }
 }

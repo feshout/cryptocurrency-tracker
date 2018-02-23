@@ -14,7 +14,7 @@ import java.util.Arrays;
 
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Currency {
+public class Currency  implements Cloneable{
 
     @JsonIgnore
     @Id
@@ -136,7 +136,7 @@ public class Currency {
     public String[] getAllData() {
         String[] allDataWithTime = {this.timeStamp, this.name, this.symbol, this.priceUSD,
                 this.priceBTC, this.marketCapUSD, this.availableSupply,
-                this.totalSupply, this.totalSupply, this.percentChange1h,
+                this.totalSupply, this.percentChange1h,
                 this.percentChange24h, this.percentChange7d};
         return allDataWithTime;
     }
@@ -148,6 +148,10 @@ public class Currency {
         String[] allData = Arrays.copyOfRange(dataWithTime, 1, dataWithTime.length);
 
         return allData;
+    }
+
+    public Currency clone() throws CloneNotSupportedException {
+        return (Currency) super.clone();
     }
 
 

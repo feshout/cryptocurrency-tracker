@@ -33,7 +33,7 @@ public class DataAccess implements Runnable{
 
             try {
                 updateData();
-                Thread.sleep(8000);
+                Thread.sleep(4000);
                 setDataToPrint();
             } catch (InterruptedException e) {
                 isRunning = false;
@@ -54,6 +54,10 @@ public class DataAccess implements Runnable{
         return this.currencyMap;
     }
 
+    public void stopThread(){
+        this.thread.interrupt();
+    }
+
     public void addSelectedCurrenciesSymbol(String symbol){
         this.selectedCurrenciesSymbols.add(symbol);
     }
@@ -69,7 +73,5 @@ public class DataAccess implements Runnable{
             selectedCurrencies.add(currencyMap.get(symbol));
             printData.setDataToPrint(selectedCurrencies);
         }
-
-
     }
 }

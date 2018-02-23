@@ -20,6 +20,7 @@ public class ApplicationController implements Runnable {
     private SaveData saveData;
     private PrintData printData;
     private TableView tableView;
+    private Thread thread;
 
     public ApplicationController(CurrencyRepository currencyRepository, DataAccess dataAccess, SaveData saveData, PrintData printData, TableView tableView) {
         this.currencyRepository = currencyRepository;
@@ -27,7 +28,7 @@ public class ApplicationController implements Runnable {
         this.saveData = saveData;
         this.printData = printData;
         this.tableView = tableView;
-        Thread thread = new Thread(this);
+        this.thread = new Thread(this);
         thread.start();
     }
     @Override
@@ -41,9 +42,9 @@ public class ApplicationController implements Runnable {
 
         String input = "";
 
-        while(true) {
+        while(!input.equals("EXIT")) {
 
-            input = ApplicationView.getInput("Enter command: ").toUpperCase();
+            input = ApplicationView.getInput().toUpperCase();
             if (InputHelper.validateInput(input)) {
 
                 String operation = InputHelper.handleInput(input)[0];
@@ -62,27 +63,24 @@ public class ApplicationController implements Runnable {
                     }
                 } else if (operation.equals("HISTORY")) {
 
-                    List<Currency> currencyHistory = currencyRepository.findAllBySymbol(symbol);
-                    tableView.printActualData(currencyHistory);
-                } else if (operation.equals("SORT")) {
-                    if(symbol.matches("/^\\d+$/")) {
-                        int nrOfColumn = Integer.valueOf(symbol);
-                        System.out.println(nrOfColumn);
-                        if(nrOfColumn > 1 && nrOfColumn < 11) {
-                            tableView.setNrOfColumnToSort(nrOfColumn - 1);
-                        }
-                    }
+                    List<Currency> currencyHistory = currencyRepository.findBySymbol(symbol);
+//                    printData.suspend();
+                    tableView.printHistoricalData(currencyHistory);
 
+                } else if (operation.equals("SORT")) {
+                    if(symbol.matches("^([0-9]\\d*|0)$")) {
+                        int nrOfColumn = Integer.valueOf(symbol);
+                            tableView.setNrOfColumnToSort(nrOfColumn);
+                    }
                 }
             }
-            if(input.equals("EXIT")){
-                System.exit(0);
-            }
         }
+        dataAccess.stopThread();
+        printData.stopThread();
+        saveData.stopThread();
     }
 
     public List<Currency> getSelectedCurrencies() {
-
 
         for (String symbol : selectedCurrenciesSymbols) {
             Currency currency = dataAccess.getData().get(symbol);
