@@ -13,8 +13,6 @@ import java.util.List;
 @Component
 public class ApplicationController implements Runnable {
 
-    private List<String> selectedCurrenciesSymbols = new LinkedList<>();
-    private List<Currency> selectedCurrencies = new LinkedList<>();
     private CurrencyRepository currencyRepository;
     private DataAccess dataAccess;
     private SaveData saveData;
@@ -64,7 +62,7 @@ public class ApplicationController implements Runnable {
                 } else if (operation.equals("HISTORY")) {
 
                     List<Currency> currencyHistory = currencyRepository.findBySymbol(symbol);
-//                    printData.suspend();
+                    printData.suspend();
                     tableView.printHistoricalData(currencyHistory);
 
                 } else if (operation.equals("SORT")) {
@@ -78,14 +76,5 @@ public class ApplicationController implements Runnable {
         dataAccess.stopThread();
         printData.stopThread();
         saveData.stopThread();
-    }
-
-    public List<Currency> getSelectedCurrencies() {
-
-        for (String symbol : selectedCurrenciesSymbols) {
-            Currency currency = dataAccess.getData().get(symbol);
-            selectedCurrencies.add(currency);
-        }
-        return selectedCurrencies;
     }
 }

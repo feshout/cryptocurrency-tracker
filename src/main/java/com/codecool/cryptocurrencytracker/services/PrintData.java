@@ -34,7 +34,8 @@ public class PrintData implements Runnable {
                 Thread.sleep(10000);
                 clearScreen();
                 if(suspend){
-                    ApplicationView.pause();
+//                    ApplicationView.pause();
+                    Thread.sleep(10000);
                     suspend = false;
                 }
                 tableView.printActualData(dataToPrint);

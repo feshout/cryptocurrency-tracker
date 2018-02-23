@@ -9,6 +9,5 @@ import java.util.List;
 @Repository
 public interface CurrencyRepository extends CrudRepository<Currency, Integer> {
 
-    public List<Currency> findAllBySymbol(String symbol);
-    public List<Currency> findBySymbol(String symbol);
+    List<Currency> findBySymbol(String symbol);
 }

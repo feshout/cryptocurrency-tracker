@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
 @Entity
@@ -42,7 +43,7 @@ public class Currency  implements Cloneable{
 
     public Currency() {
 
-        timeStamp = Timestamp.valueOf(LocalDateTime.now()).toString();
+        timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")).toString();
     }
 
     public String getId() {

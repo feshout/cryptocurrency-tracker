@@ -15,7 +15,7 @@ public class ApplicationView {
 
     public static void pause(){
         System.out.println("Press Enter to continue");
-        scanner.next();
+        String input = scanner.nextLine();
     }
 
     public static void printMessage(String message){

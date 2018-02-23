@@ -37,10 +37,6 @@ public class TableView {
 
     public void printHistoricalData(List<Currency> currencies) {
 
-        for (Currency currency : currencies){
-            System.out.println(currency.getAllDataWithoutTime());
-        }
-
         int nrOfRows = currencies.size();
         int nrOfColumns = NAMES_OF_COLUMNS_WITH_TIME.length;
         String[][] data = new String[nrOfRows][nrOfColumns];
@@ -50,7 +46,7 @@ public class TableView {
         }
 
         TextTable table = new TextTable(NAMES_OF_COLUMNS_WITH_TIME, data);
-        table.setSort(nrOfColumnToSort);
+        table.setSort(0);
         table.printTable();
 
     }
